@@ -1,0 +1,17 @@
+/*
+Plugin Name: Chat Room
+Plugin URI: http://webdevstudios.com/support/wordpress-plugins/
+Description: Chat Room for WordPress
+Author: WebDevStudios.com
+Version: 1.0
+Author URI: http://webdevstudios.com/
+License: GPLv2
+*/
+
+.chat-container {
+	height: 260px;
+	overflow: scroll;
+	overflow-x: hidden;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #CCC;
+}
