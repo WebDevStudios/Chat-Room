@@ -211,7 +211,7 @@ Class Chatroom {
 		?>
 		<div class="chat-container">
 		</div>
-		<textarea class="chat-text-entry" placeholder="<?php echo apply_filters('chat-room-placeholder', ''); ?>"></textarea>
+		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters('chat-room-placeholder', '') ); ?>"></textarea>
 		<?php
 		return '';
 	}
