@@ -43,7 +43,7 @@ Class Chatroom {
 			'view_item' => __( 'View Chat Room', 'chatroom' ),
 			'search_items' => __( 'Search Chat Rooms', 'chatroom' ),
 			'not_found' => __( 'No Chat Rooms found', 'chatroom' ),
-			'not_found_in_trash' => __( 'No Chat Rooms found in Trash', 'chatroom' ), 
+			'not_found_in_trash' => __( 'No Chat Rooms found in Trash', 'chatroom' ),
 			'parent_item_colon' => '',
 			'menu_name' => __( 'Chat Rooms', 'chatroom' )
 		);
@@ -51,16 +51,16 @@ Class Chatroom {
 			'labels' => $labels,
 			'public' => true,
 			'publicly_queryable' => true,
-			'show_ui' => true, 
-			'show_in_menu' => true, 
+			'show_ui' => true,
+			'show_in_menu' => true,
 			'query_var' => true,
 			'capability_type' => 'post',
-			'has_archive' => true, 
+			'has_archive' => true,
 			'hierarchical' => false,
 			'menu_position' => null,
 			'show_in_nav_menus' => true,
 			'supports' => array( 'title' )
-		); 
+		);
 		register_post_type( 'chat-room', $args );
 	}
 
@@ -87,19 +87,19 @@ Class Chatroom {
 		// TODO create warnings if the user can't create a file, and suggest putting FTP creds in wp-config
 	}
 	function define_javascript_variables() {
-		global $post;	
+		global $post;
 		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
 			return; ?>
 		<script>
 		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
 		var chatroom_slug = '<?echo $post->post_name; ?>';
 		</script>
-		<?php 
+		<?php
 
 	}
 	function ajax_check_updates_handler() {
 		$upload_dir = wp_upload_dir();
-		$log_filename = $this->get_log_filename( $_POST['chatroom_slug'] ); 
+		$log_filename = $this->get_log_filename( $_POST['chatroom_slug'] );
 		$contents = $this->parse_messages_log_file( $log_filename );
 		$messages = json_decode( $contents );
 		foreach ( $messages as $key => $message ) {
@@ -113,9 +113,9 @@ Class Chatroom {
 
 	/**
 	 * AJAX server-side handler for sending a message.
-	 * 
+	 *
 	 * Stores the message in a recent messages file.
-	 * 
+	 *
 	 * Clears out cache of any messages older than 10 seconds.
 	 */
 	function ajax_send_message_handler() {
@@ -145,7 +145,7 @@ Class Chatroom {
 		$last_message_id = 0; // Helps determine the new message's ID
 		foreach ( $messages as $key => $message ) {
 			if ( time() - $message->time > 10 ) {
-				$last_message_id = $message->id; 
+				$last_message_id = $message->id;
 				unset( $messages[$key] );
 			}
 			else {
@@ -156,9 +156,9 @@ Class Chatroom {
 		if ( ! empty( $messages ) )
 			$last_message_id = end( $messages )->id;
 		$new_message_id = $last_message_id + 1;
-		$messages[] = array( 
+		$messages[] = array(
 			'id' => $new_message_id,
-			'time' => time(), 
+			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
 			'html' => '<div class="chat-message-' . $new_message_id . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
@@ -169,9 +169,9 @@ Class Chatroom {
 		$log_filename = $this->get_log_filename( $chatroom_slug, date( 'm-d-y', time() ) );
 		$contents = $this->parse_messages_log_file( $log_filename );
 		$messages = json_decode( $contents );
-		$messages[] = array( 
+		$messages[] = array(
 			'id' => $new_message_id,
-			'time' => time(), 
+			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
 			'html' => '<div class="chat-message-' . $new_message_id .'"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
@@ -186,7 +186,7 @@ Class Chatroom {
 
 
 	function get_log_filename( $chatroom_slug, $date = 'recent' ) {
-		$upload_dir = wp_upload_dir();	
+		$upload_dir = wp_upload_dir();
 		$log_filename = $upload_dir['basedir'] . '/chatter/' . $chatroom_slug . '-' . $date;
 		return $log_filename;
 	}
@@ -201,17 +201,17 @@ Class Chatroom {
 
 	function the_content_filter( $content ) {
 		global $post;
-		if ( $post->post_type != 'chat-room' ) 
+		if ( $post->post_type != 'chat-room' )
 			return $content;
 		if ( ! is_user_logged_in() )  {
-			?>You need to be logged in to participate in the chatroom.<?php 
+			?>You need to be logged in to participate in the chatroom.<?php
 			return;
 		}
-			
+
 		?>
 		<div class="chat-container">
 		</div>
-		<textarea class="chat-text-entry"></textarea>
+		<textarea class="chat-text-entry" placeholder="<?php echo apply_filters('chat-room-placeholder', ''); ?>"></textarea>
 		<?php
 		return '';
 	}
