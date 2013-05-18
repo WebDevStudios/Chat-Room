@@ -20,6 +20,7 @@ Class Chatroom {
 		add_action( 'wp_ajax_check_updates', array( $this, 'ajax_check_updates_handler' ) );
 		add_action( 'wp_ajax_send_message', array( $this, 'ajax_send_message_handler' ) );
 		add_filter( 'the_content', array( $this, 'the_content_filter' ) );
+		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
 	}
 
 	function activation_hook() {
@@ -33,19 +34,19 @@ Class Chatroom {
 
 	function register_post_types() {
 		$labels = array(
-			'name' => _x( 'Chat Rooms', 'post type general name', 'chatroom' ),
-			'singular_name' => _x( 'Chat Room', 'post type singular name', 'chatroom' ),
-			'add_new' => _x( 'Add New', 'book', 'chatroom' ),
-			'add_new_item' => __( 'Add New Chat Room', 'chatroom' ),
-			'edit_item' => __( 'Edit Chat Room', 'chatroom' ),
-			'new_item' => __( 'New Chat Room', 'chatroom' ),
-			'all_items' => __( 'All Chat Rooms', 'chatroom' ),
-			'view_item' => __( 'View Chat Room', 'chatroom' ),
-			'search_items' => __( 'Search Chat Rooms', 'chatroom' ),
-			'not_found' => __( 'No Chat Rooms found', 'chatroom' ),
-			'not_found_in_trash' => __( 'No Chat Rooms found in Trash', 'chatroom' ),
+			'name' => _x( 'Chat Rooms', 'post type general name', 'chat-room' ),
+			'singular_name' => _x( 'Chat Room', 'post type singular name', 'chat-room' ),
+			'add_new' => _x( 'Add New', 'book', 'chat-room' ),
+			'add_new_item' => __( 'Add New Chat Room', 'chat-room' ),
+			'edit_item' => __( 'Edit Chat Room', 'chat-room' ),
+			'new_item' => __( 'New Chat Room', 'chat-room' ),
+			'all_items' => __( 'All Chat Rooms', 'chat-room' ),
+			'view_item' => __( 'View Chat Room', 'chat-room' ),
+			'search_items' => __( 'Search Chat Rooms', 'chat-room' ),
+			'not_found' => __( 'No Chat Rooms found', 'chat-room' ),
+			'not_found_in_trash' => __( 'No Chat Rooms found in Trash', 'chat-room' ),
 			'parent_item_colon' => '',
-			'menu_name' => __( 'Chat Rooms', 'chatroom' )
+			'menu_name' => __( 'Chat Rooms', 'chat-room' )
 		);
 		$args = array(
 			'labels' => $labels,
