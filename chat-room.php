@@ -77,10 +77,11 @@ Class Chatroom {
 		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
 			return;
 		$upload_dir = wp_upload_dir();
-		$log_filename = $upload_dir['basedir'] . '/chatter/' . $post->post_name . '-' . date( 'm-d-y', time() );
+		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
+		$log_filename = $upload_dir['basedir'] . $log_folder . $post->post_name . '-' . date( 'm-d-y', time() );
 		if ( file_exists( $log_filename ) )
 			return;
-		wp_mkdir_p( $upload_dir['basedir'] . '/chatter/' );
+		wp_mkdir_p( $upload_dir['basedir'] . $log_folder );
 		$handle = fopen( $log_filename, 'w' );
 
 		fwrite( $handle, json_encode( array() ) );
@@ -138,6 +139,8 @@ Class Chatroom {
 	    }
 
 		$content = esc_attr( $content );
+		//allow adding custom classes to message output
+		$chat_custom_classes = implode( ' ', apply_filters( 'chat_room_custom_msg_classes', array() ) );
 		// Save the message in recent messages file
 
 		$log_filename = $this->get_log_filename( $chatroom_slug );
@@ -162,7 +165,7 @@ Class Chatroom {
 			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 
@@ -175,7 +178,7 @@ Class Chatroom {
 			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id .'"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 	}
@@ -188,7 +191,8 @@ Class Chatroom {
 
 	function get_log_filename( $chatroom_slug, $date = 'recent' ) {
 		$upload_dir = wp_upload_dir();
-		$log_filename = $upload_dir['basedir'] . '/chatter/' . $chatroom_slug . '-' . $date;
+		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
+		$log_filename = $upload_dir['basedir'] . $log_folder . $chatroom_slug . '-' . $date;
 		return $log_filename;
 	}
 
@@ -205,15 +209,18 @@ Class Chatroom {
 		if ( $post->post_type != 'chat-room' )
 			return $content;
 		if ( ! is_user_logged_in() )  {
-			?>You need to be logged in to participate in the chatroom.<?php
+			echo apply_filters( 'chat_room_not_logged_in_msg', 'You need to be logged in to participate in the chatroom.' );
 			return;
 		}
 
+		do_action( 'before_chat_room_log' );
 		?>
 		<div class="chat-container">
 		</div>
-		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters('chat-room-placeholder', '') ); ?>"></textarea>
 		<?php
+		do_action( 'before_chat_room_msgbox' ); ?>
+		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters('chat-room-placeholder', '') ); ?>"></textarea>
+		<?php do_action( 'after_chat_room_msgbox' );
 		return '';
 	}
 
