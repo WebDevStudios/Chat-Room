@@ -2,7 +2,7 @@ var last_update_received = 0;
 function chatroom_check_updates() {
 	jQuery.post(
 		ajaxurl,
-		{ 
+		{
 			action: 'check_updates',
 			chatroom_slug: chatroom_slug,
 			last_update_id: last_update_id
@@ -54,7 +54,7 @@ function chatroom_send_message() {
 	jQuery( 'textarea.chat-text-entry' ).val('');
 	jQuery.post(
 		ajaxurl,
-		{ 
+		{
 			action: 'send_message',
 			chatroom_slug: chatroom_slug,
 			message: message
