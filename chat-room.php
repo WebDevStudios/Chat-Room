@@ -69,8 +69,7 @@ Class Chatroom {
 		global $post;
 		if ( $post->post_type != 'chat-room' )
 			return;
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'chat-room', plugins_url( 'chat-room.js', __FILE__ ) );
+		wp_enqueue_script( 'chat-room', plugins_url( 'chat-room.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_style( 'chat-room-styles', plugins_url( 'chat-room.css', __FILE__ ) );
 	}
 	function maybe_create_chatroom_log_file( $post_id, $post ) {
