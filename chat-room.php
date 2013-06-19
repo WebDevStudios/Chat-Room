@@ -19,6 +19,8 @@ Class Chatroom {
 		add_action( 'wp_head', array( $this, 'define_javascript_variables' ) );
 		add_action( 'wp_ajax_check_updates', array( $this, 'ajax_check_updates_handler' ) );
 		add_action( 'wp_ajax_send_message', array( $this, 'ajax_send_message_handler' ) );
+		add_action( 'wp_ajax_nopriv_check_updates', array( $this, 'ajax_check_updates_handler' ) );
+		add_action( 'wp_ajax_nopriv_send_message', array( $this, 'ajax_send_message_handler' ) );
 		add_filter( 'the_content', array( $this, 'the_content_filter' ) );
 		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
 	}
@@ -120,22 +122,31 @@ Class Chatroom {
 	 * Clears out cache of any messages older than 10 seconds.
 	 */
 	function ajax_send_message_handler() {
-		$current_user = wp_get_current_user();
-		$this->save_message( $_POST['chatroom_slug'], $current_user->id, $_POST['message'] );
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			$user = $current_user->id;
+		} else {
+			$user = $_POST['username'];
+		}
+		$this->save_message( $_POST['chatroom_slug'], $user, $_POST['message'] );
 		die;
 	}
 
-	function save_message( $chatroom_slug, $user_id, $content ) {
-		$user = get_userdata( $user_id );
-
-		if ( ! $user_text_color = get_user_meta( $user_id, 'user_color', true ) ) {
-	    	// Set random color for each user
-	    	$red = rand( 0, 16 );
-	    	$green = 16 - $red;
-	    	$blue = rand( 0, 16 );
-		    $user_text_color = '#' . dechex( $red^2 ) . dechex( $green^2 ) . dechex( $blue^2 );
-	    	update_user_meta( $user_id, 'user_color', $user_text_color );
-	    }
+	function save_message( $chatroom_slug, $user, $content ) {
+		if ( is_int( $user ) ) {
+			$user = get_userdata( $user );
+			if ( ! $user_text_color = get_user_meta( $user_id, 'user_color', true ) ) {
+				// Set random color for each user
+				$red = rand( 0, 16 );
+				$green = 16 - $red;
+				$blue = rand( 0, 16 );
+				$user_text_color = '#' . dechex( $red^2 ) . dechex( $green^2 ) . dechex( $blue^2 );
+				update_user_meta( $user_id, 'user_color', $user_text_color );
+			}
+		} else {
+			$loggedout = $user;
+			$user_text_color = '#000';
+		}
 
 		$content = esc_attr( $content );
 		//allow adding custom classes to message output
@@ -159,12 +170,19 @@ Class Chatroom {
 		if ( ! empty( $messages ) )
 			$last_message_id = end( $messages )->id;
 		$new_message_id = $last_message_id + 1;
+		if( is_user_logged_in() ) {
+			$sender = $user->user_login;
+			$html = '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>';
+		} else {
+			$sender = $loggedout;
+			$html = '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $loggedout . '</strong>: ' . $content . '</div>';
+		}
 		$messages[] = array(
 			'id' => $new_message_id,
 			'time' => time(),
-			'sender' => $user_id,
+			'sender' => $sender,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => $html
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 
@@ -175,9 +193,9 @@ Class Chatroom {
 		$messages[] = array(
 			'id' => $new_message_id,
 			'time' => time(),
-			'sender' => $user_id,
+			'sender' => $sender,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => $html
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 	}
@@ -207,17 +225,17 @@ Class Chatroom {
 		global $post;
 		if ( $post->post_type != 'chat-room' )
 			return $content;
-		if ( ! is_user_logged_in() )  {
-			echo apply_filters( 'chat_room_not_logged_in_msg', 'You need to be logged in to participate in the chatroom.' );
-			return;
-		}
 
 		do_action( 'before_chat_room_log' );
 		?>
 		<div class="chat-container">
 		</div>
 		<?php
-		do_action( 'before_chat_room_msgbox' ); ?>
+		do_action( 'before_chat_room_msgbox' );
+		$name = ( !empty( $_POST['username'] ) ) ? $_POST['username'] : '';
+		if ( !is_user_logged_in() ) { ?>
+			<input type="text" name="username" id="username" value="<?php echo $name; ?>" />
+		<?php } ?>
 		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters('chat-room-placeholder', '') ); ?>"></textarea>
 		<?php do_action( 'after_chat_room_msgbox' );
 		return '';

@@ -50,13 +50,16 @@ jQuery(document).ready( function() {
 });
 
 function chatroom_send_message() {
+	var message, username;
 	message = jQuery( 'textarea.chat-text-entry' ).val();
+	username = jQuery( '#username').val();
 	jQuery( 'textarea.chat-text-entry' ).val('');
 	jQuery.post(
 		ajaxurl,
 		{
 			action: 'send_message',
 			chatroom_slug: chatroom_slug,
+			username: username,
 			message: message
 		},
 		function (response) {
