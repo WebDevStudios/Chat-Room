@@ -23,15 +23,26 @@ Class Chatroom {
 		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
 	}
 
+	/**
+	 * Let's get the party started. Register our CPT and flush the rewrite rules.
+	 * @return void nothing to return here.
+	 */
 	function activation_hook() {
 		$this->register_post_types();
 		flush_rewrite_rules();
 	}
-
+	/**
+	 * Aww, busted. Flush the rewrite rules for after the chat room CPT left.
+	 * @return void nothing to return here.
+	 */
 	function deactivation_hook() {
 		flush_rewrite_rules();
 	}
 
+	/**
+	 * Create and register our post type
+	 * @return void nothing to return here.
+	 */
 	function register_post_types() {
 		$labels = array(
 			'name' => _x( 'Chat Rooms', 'post type general name', 'chat-room' ),
@@ -65,6 +76,10 @@ Class Chatroom {
 		register_post_type( 'chat-room', $args );
 	}
 
+	/**
+	 * Enqueue our js and css, only for when we're on a chat room.
+	 * @return void nothing to return here.
+	 */
 	function enqueue_scripts() {
 		global $post;
 		if ( $post->post_type != 'chat-room' )
@@ -72,6 +87,13 @@ Class Chatroom {
 		wp_enqueue_script( 'chat-room', plugins_url( 'chat-room.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_style( 'chat-room-styles', plugins_url( 'chat-room.css', __FILE__ ) );
 	}
+
+	/**
+	 * Set up and prepare our log files
+	 * @param  int $post_id ID for the current chat room
+	 * @param  object $post    WP_Query object for our chat room post type.
+	 * @return void          nothing to return here.
+	 */
 	function maybe_create_chatroom_log_file( $post_id, $post ) {
 		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
 			return;
@@ -87,6 +109,11 @@ Class Chatroom {
 
 		// TODO create warnings if the user can't create a file, and suggest putting FTP creds in wp-config
 	}
+
+	/**
+	 * set up our js variables for use with ajax.
+	 * @return void nothing to return here.
+	 */
 	function define_javascript_variables() {
 		global $post;
 		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
@@ -98,6 +125,11 @@ Class Chatroom {
 		<?php
 
 	}
+
+	/**
+	 * Check on our logs
+	 * @return void nothing to return here.
+	 */
 	function ajax_check_updates_handler() {
 		$upload_dir = wp_upload_dir();
 		$log_filename = $this->get_log_filename( $_POST['chatroom_slug'] );
@@ -125,6 +157,13 @@ Class Chatroom {
 		die;
 	}
 
+	/**
+	 * Prepare to write to our log file with new content
+	 * @param  string $chatroom_slug slug for the current chat room
+	 * @param  int $user_id       user ID for the message sender
+	 * @param  string $content       user's message
+	 * @return void                nothing to return here.
+	 */
 	function save_message( $chatroom_slug, $user_id, $content ) {
 		$user = get_userdata( $user_id );
 
@@ -181,13 +220,24 @@ Class Chatroom {
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 	}
+
+	/**
+	 * Open and actually write to the log file
+	 * @param  string $log_filename url for the appropriate log file
+	 * @param  string $content      messages to add
+	 * @return void               nothing to return here.
+	 */
 	function write_log_file( $log_filename, $content ) {
 		$handle = fopen( $log_filename, 'w' );
 		fwrite( $handle, $content );
 	}
 
-
-
+	/**
+	 * Return our log file name
+	 * @param  string $chatroom_slug slug for the chat room log to write to
+	 * @param  string $date          date timestamp or "recent" to append to log file name
+	 * @return string                log file name
+	 */
 	function get_log_filename( $chatroom_slug, $date = 'recent' ) {
 		$upload_dir = wp_upload_dir();
 		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
@@ -195,6 +245,11 @@ Class Chatroom {
 		return $log_filename;
 	}
 
+	/**
+	 * Parse our file for reading
+	 * @param  string $log_filename url for the appropriate log file
+	 * @return string               log content
+	 */
 	function parse_messages_log_file( $log_filename ) {
 		$upload_dir = wp_upload_dir();
 		$handle = fopen( $log_filename, 'r' );
@@ -203,6 +258,11 @@ Class Chatroom {
 		return $contents;
 	}
 
+	/**
+	 * Filter callback for chat room used to display chat room in place of the_content.
+	 * @param  [type] $content [description]
+	 * @return [type]          [description]
+	 */
 	function the_content_filter( $content ) {
 		global $post;
 		if ( $post->post_type != 'chat-room' )
