@@ -21,6 +21,7 @@ Class Chatroom {
 		add_action( 'wp_ajax_send_message', array( $this, 'ajax_send_message_handler' ) );
 		add_filter( 'the_content', array( $this, 'the_content_filter' ) );
 		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
+		add_action( 'init', array( $this, 'load_pro_if_exists' ) );
 	}
 
 	/**
@@ -283,6 +284,12 @@ Class Chatroom {
 		return '';
 	}
 
+	function load_pro_if_exists() {
+		$pro = plugin_dir_path( dirname( __FILE__ ) ) . 'chat-room-pro/chat-room-pro.php';
+		if ( file_exists( $pro ) ):
+			require_once( $pro );
+		endif;
+	}
 }
 
 $chatroom = new Chatroom();
