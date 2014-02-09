@@ -218,7 +218,7 @@ Class Chatroom {
 			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 
@@ -231,7 +231,7 @@ Class Chatroom {
 			'time' => time(),
 			'sender' => $user_id,
 			'contents' => $content,
-			'html' => '<div class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html' => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 	}
