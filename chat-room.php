@@ -142,6 +142,9 @@ Class Chatroom {
 		$log_filename = $this->get_log_filename( $_POST['chatroom_slug'] );
 		$contents = $this->parse_messages_log_file( $log_filename );
 		$messages = json_decode( $contents );
+
+		if ( !is_array( $messages ) ) { die; }
+
 		foreach ( $messages as $key => $message ) {
 			if ( $message->id <= $_POST['last_update_id'] )
 				unset( $messages[$key] );
