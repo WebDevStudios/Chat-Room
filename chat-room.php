@@ -21,7 +21,8 @@ Class Chatroom {
 		add_action( 'wp_ajax_send_message', array( $this, 'ajax_send_message_handler' ) );
 		add_filter( 'the_content', array( $this, 'the_content_filter' ) );
 		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
-		add_action( 'init', array( $this, 'load_pro_if_exists' ) );
+		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
+		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 	}
 
 	/**
@@ -268,7 +269,7 @@ Class Chatroom {
 		global $post;
 		if ( $post->post_type != 'chat-room' )
 			return $content;
-		if ( ! is_user_logged_in() )  {
+		if ( '1' == get_post_meta( $post->ID, '_logged_in_only', true ) )  {
 			echo apply_filters( 'chat_room_not_logged_in_msg', 'You need to be logged in to participate in the chatroom.' );
 			return;
 		}
@@ -284,12 +285,50 @@ Class Chatroom {
 		return '';
 	}
 
-	function load_pro_if_exists() {
-		$pro = plugin_dir_path( dirname( __FILE__ ) ) . 'chat-room-pro/chat-room-pro.php';
-		if ( file_exists( $pro ) ):
-			require_once( $pro );
-		endif;
+	function register_meta_box() {
+		$screens = array( 'chat-room' );
+		foreach ($screens as $screen) {
+			add_meta_box( 'logged-in-only', 'Privacy?', array( $this, 'render_meta_box' ), $screen, 'side', 'default' );
+		}
 	}
+
+	/* Prints the box content */
+	function render_meta_box( $post ) {
+		// Use nonce for verification
+		wp_nonce_field( plugin_basename( __FILE__ ), 'chatroom_loggedin_nonce' );
+
+		// The actual fields for data entry
+		// Use get_post_meta to retrieve an existing value from the database and use the value for the form
+		$value = get_post_meta( $post->ID, '_logged_in_only', true );
+		?>
+		<input type="checkbox" id="logged_in_only" name="logged_in_only" value="1" <?php if( $value == '1') echo 'checked="checked"'; ?> />
+		<label for="logged_in_only"><?php _e( 'Should the user be logged in?', 'chat-room' ); ?></label><br/>
+		<?php
+	}
+
+
+	function save_meta_box( $post_id ) {
+		// First we need to check if the current user is authorised to do this action.
+		if ( 'page' == $_POST['post_type'] ) {
+			if ( ! current_user_can( 'edit_page', $post_id ) )
+				return;
+		} else {
+			if ( ! current_user_can( 'edit_post', $post_id ) )
+				return;
+		}
+
+		// Secondly we need to check if the user intended to change this value.
+		if ( ! isset( $_POST['chatroom_loggedin_nonce'] ) || ! wp_verify_nonce( $_POST['chatroom_loggedin_nonce'], plugin_basename( __FILE__ ) ) )
+			return;
+
+		//if saving in a custom table, get post_ID
+		$post_ID = $_POST['post_ID'];
+		//sanitize user input
+		$mydata = sanitize_text_field( $_POST['logged_in_only'] );
+
+		update_post_meta($post_ID, '_logged_in_only', $mydata);
+	}
+
 }
 
 $chatroom = new Chatroom();
