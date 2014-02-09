@@ -35,6 +35,7 @@ The plugin currently will only support servers that have direct PHP filesystem a
 * Hooks for other developers to utilize.
 * Some usability notes.
 * Prevent sending empty messages to chat
+* Fix conflict with Yoast SEO and excerpts
 
 = 0.1.2 =
 * Fix auto-scroll of the div down to new messages for Windows FF.
