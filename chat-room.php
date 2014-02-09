@@ -103,10 +103,12 @@ Class Chatroom {
 
 		$upload_dir = wp_upload_dir();
 		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
-		$log_filename = $upload_dir['basedir'] . $log_folder . $post->post_name . '-' . date( 'm-d-y', time() );
-		if ( file_exists( $log_filename ) )
+		$log_filename = $upload_dir['basedir'] . '/' . $log_folder . '/' . $post->post_name . '-' . date( 'm-d-y', time() );
+		if ( file_exists( $log_filename ) ) {
 			return;
-		wp_mkdir_p( $upload_dir['basedir'] . $log_folder );
+		}
+
+		wp_mkdir_p( $upload_dir['basedir'] . '/' . $log_folder );
 		$handle = fopen( $log_filename, 'w' );
 
 		fwrite( $handle, json_encode( array() ) );
