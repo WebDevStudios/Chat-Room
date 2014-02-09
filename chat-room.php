@@ -271,8 +271,11 @@ Class Chatroom {
 	 */
 	function the_content_filter( $content ) {
 		global $post;
-		if ( $post->post_type != 'chat-room' )
+
+		if ( $post->post_type != 'chat-room' ) {
 			return $content;
+		}
+
 		if ( '1' == get_post_meta( $post->ID, '_logged_in_only', true ) )  {
 			echo apply_filters( 'chat_room_not_logged_in_msg', 'You need to be logged in to participate in the chatroom.' );
 			return;
