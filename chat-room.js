@@ -47,6 +47,10 @@ jQuery(document).ready( function($) {
 			chatroom_send_message();
 		}
 	});
+	$('.chat-submit').on('click',function(event){
+		event.preventDefault();
+		chatroom_send_message();
+	});
 });
 
 function chatroom_send_message() {
