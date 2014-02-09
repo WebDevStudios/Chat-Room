@@ -43,8 +43,8 @@ jQuery(document).ready( function($) {
 	chatroom_check_updates();
 	$('textarea.chat-text-entry').keypress( function( event ) {
 		if ( event.charCode == 13 || event.keyCode == 13 ) {
+			event.preventDefault();
 			chatroom_send_message();
-			return false;
 		}
 	});
 });
