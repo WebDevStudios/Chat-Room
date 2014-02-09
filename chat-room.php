@@ -287,9 +287,9 @@ Class Chatroom {
 		</div>
 		<?php
 		do_action( 'before_chat_room_msgbox' ); ?>
-		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters('chat-room-placeholder', '') ); ?>"></textarea>
-		<?php do_action( 'after_chat_room_msgbox' );
-		return '';
+		<textarea class="chat-text-entry" placeholder="<?php echo esc_attr( apply_filters( 'chat-room-placeholder', '' ) ); ?>"></textarea>
+		<?php
+		do_action( 'after_chat_room_msgbox' );
 	}
 
 	function register_meta_box() {
