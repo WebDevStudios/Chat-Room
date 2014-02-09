@@ -28,6 +28,10 @@ The plugin currently will only support servers that have direct PHP filesystem a
 
 == Changelog ==
 
+= 0.2 =
+* Add ability to toggle if user should be logged in or not to use chat.
+* Fix issue with log paths.
+
 = 0.1.2 =
 * Fix auto-scroll of the div down to new messages for Windows FF.
 
