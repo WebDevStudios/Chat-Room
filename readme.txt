@@ -36,6 +36,7 @@ The plugin currently will only support servers that have direct PHP filesystem a
 * Some usability notes.
 * Prevent sending empty messages to chat
 * Fix conflict with Yoast SEO and excerpts
+* Add support for clicking user name and having it added to textarea
 
 = 0.1.2 =
 * Fix auto-scroll of the div down to new messages for Windows FF.
