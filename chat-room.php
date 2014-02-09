@@ -97,8 +97,10 @@ Class Chatroom {
 	 * @return void          nothing to return here.
 	 */
 	function maybe_create_chatroom_log_file( $post_id, $post ) {
-		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
+		if ( empty( $post->post_type ) || 'chat-room' != $post->post_type || 'Auto Draft' == $post->post_title ) {
 			return;
+		}
+
 		$upload_dir = wp_upload_dir();
 		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
 		$log_filename = $upload_dir['basedir'] . $log_folder . $post->post_name . '-' . date( 'm-d-y', time() );
