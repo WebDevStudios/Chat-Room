@@ -41,15 +41,22 @@ function chatroom_strip_slashes(str) {
 jQuery(document).ready( function($) {
 	last_update_id = 0;
 	chatroom_check_updates();
+	//Add support for enter key submission
 	$('textarea.chat-text-entry').keypress( function( event ) {
 		if ( event.charCode == 13 || event.keyCode == 13 ) {
 			event.preventDefault();
 			chatroom_send_message();
 		}
 	});
+	//Add support for "button" submission.
 	$('.chat-submit').on('click',function(event){
 		event.preventDefault();
 		chatroom_send_message();
+	});
+	//add @user support for textarea.
+	$('.chat-container').on('click','div[class^="chat-message-"]',function(event){
+		var $clicked_user = $(this).data('user-id');
+		$('textarea.chat-text-entry').val('@'+$clicked_user);
 	});
 });
 
