@@ -322,7 +322,6 @@ Class Chatroom {
 		<?php
 	}
 
-
 	function save_meta_box( $post_id ) {
 		// First we need to check if the current user is authorised to do this action.
 		if ( 'page' == $_POST['post_type'] ) {
