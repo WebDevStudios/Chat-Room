@@ -10,6 +10,9 @@ License: GPLv2 or later
 */
 
 Class Chatroom {
+
+	public $noinception = 'false';
+
 	function __construct() {
 		register_activation_hook( __FILE__, array( $this, 'activation_hook' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivation_hook' ) );
@@ -25,6 +28,7 @@ Class Chatroom {
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 		add_action( 'after_chat_room_msgbox', array( $this, 'submit_button' ) );
 		add_action( 'after_chat_room_msgbox', array( $this, 'usability_notes' ) );
+		add_action( 'publish_chat-room', array( $this, 'yoast_fix' ), 10, 2 );
 	}
 
 	/**
@@ -344,8 +348,25 @@ Class Chatroom {
 	function submit_button() {
 		echo '<p><a href="#" class="chat-submit">Send to chat</a></p>';
 	}
+
 	function usability_notes() {
 		echo '<p><small>' . __( 'Press enter, or click "Send to chat", to submit', 'chat-room' ) . '<small></p>';
+	}
+
+	function yoast_fix( $post_id, $post ) {
+
+		if( 'true' == $this->noinception || isset( $post->post_excerpt ) ) {
+			return;
+		}
+
+		$this->noinception = 'true';
+
+		$args = array(
+			'ID' => $post_id,
+			'post_excerpt' => $post->post_title
+		);
+		wp_update_post( $args );
+
 	}
 }
 
