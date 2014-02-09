@@ -345,7 +345,7 @@ Class Chatroom {
 		echo '<p><a href="#" class="chat-submit">Send to chat</a></p>';
 	}
 	function usability_notes() {
-		echo '<p><small>' . __( 'Hit enter to send to the chat', 'chat-room' ) . '<small></p>';
+		echo '<p><small>' . __( 'Press enter, or click "Send to chat", to submit', 'chat-room' ) . '<small></p>';
 	}
 }
 
