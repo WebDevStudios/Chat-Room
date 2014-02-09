@@ -34,6 +34,7 @@ The plugin currently will only support servers that have direct PHP filesystem a
 * Add some more styles to make the chat input look better.
 * Hooks for other developers to utilize.
 * Some usability notes.
+* Prevent sending empty messages to chat
 
 = 0.1.2 =
 * Fix auto-scroll of the div down to new messages for Windows FF.
