@@ -15,3 +15,7 @@ License: GPLv2
 	margin-bottom: 20px;
 	border-bottom: 1px solid #CCC;
 }
+
+.chat-text-entry {
+	width: 100%;
+}
