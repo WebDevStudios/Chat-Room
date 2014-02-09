@@ -349,7 +349,7 @@ Class Chatroom {
 	}
 
 	function usability_notes() {
-		echo '<p><small>' . __( 'Press enter, or click "Send to chat", to submit', 'chat-room' ) . '<small></p>';
+		echo '<p><small>' . __( 'Press enter, or click "Send to chat", to submit. Click a user name to add it to the textarea.', 'chat-room' ) . '<small></p>';
 	}
 
 	function yoast_fix( $post_id, $post ) {
