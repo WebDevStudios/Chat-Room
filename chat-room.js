@@ -38,10 +38,10 @@ function chatroom_strip_slashes(str) {
     });
 }
 
-jQuery(document).ready( function() {
+jQuery(document).ready( function($) {
 	last_update_id = 0;
 	chatroom_check_updates();
-	jQuery( 'textarea.chat-text-entry' ).keypress( function( event ) {
+	$('textarea.chat-text-entry').keypress( function( event ) {
 		if ( event.charCode == 13 || event.keyCode == 13 ) {
 			chatroom_send_message();
 			return false;
