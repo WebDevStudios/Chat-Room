@@ -9,7 +9,7 @@ function chatroom_check_updates() {
 		},
 		function (response) {
 			chats = jQuery.parseJSON( response );
-			if ( chats != null ) {
+			if ( chats !== null ) {
 				for ( i = 0; i < chats.length; i++ ) {
 					if ( jQuery('div.chat-container div.chat-message-'+chats[i].id).length )
 						continue;
