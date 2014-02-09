@@ -23,6 +23,7 @@ Class Chatroom {
 		load_plugin_textdomain( 'chat-room', false, 'chat-room/languages' );
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
+		add_action( 'after_chat_room_msgbox', array( $this, 'submit_button' ) );
 		add_action( 'after_chat_room_msgbox', array( $this, 'usability_notes' ) );
 	}
 
@@ -340,6 +341,9 @@ Class Chatroom {
 		update_post_meta($post_ID, '_logged_in_only', $mydata);
 	}
 
+	function submit_button() {
+		echo '<p><a href="#" class="chat-submit">Send to chat</a></p>';
+	}
 	function usability_notes() {
 		echo '<p><small>' . __( 'Hit enter to send to the chat', 'chat-room' ) . '<small></p>';
 	}
