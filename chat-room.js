@@ -55,6 +55,9 @@ jQuery(document).ready( function($) {
 
 function chatroom_send_message() {
 	message = jQuery( 'textarea.chat-text-entry' ).val();
+	if(message.length==0){
+		return false;
+	}
 	jQuery( 'textarea.chat-text-entry' ).val('');
 	jQuery.post(
 		ajaxurl,
