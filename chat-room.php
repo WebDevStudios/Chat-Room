@@ -132,7 +132,7 @@ Class Chatroom {
 			return; ?>
 		<script>
 		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
-		var chatroom_slug = '<?echo $post->post_name; ?>';
+		var chatroom_slug = '<?php echo $post->post_name; ?>';
 		</script>
 		<?php
 
