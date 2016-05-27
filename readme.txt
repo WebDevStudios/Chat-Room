@@ -15,6 +15,8 @@ The Chat Room plugin allows administrators to easily create chat rooms for their
 
 The plugin currently will only support servers that have direct PHP filesystem access, which may not be available on all hosting environments.
 
+[Pluginize](https://pluginize.com/?utm_source=chat-room&utm_medium=text&utm_campaign=wporg) was launched in 2016 by [WebDevStudios](https://webdevstudios.com/) to promote, support, and house all of their [WordPress products](https://pluginize.com/shop/?utm_source=chat-room&utm_medium=text&utm_campaign=wporg). Pluginize is not only creating new products for WordPress all the time, but also provides [ongoing support and development for WordPress community favorites like CPTUI](https://wordpress.org/plugins/custom-post-type-ui/), [CMB2](https://wordpress.org/plugins/cmb2/), and more.
+
 == Installation ==
 
 1. Upload `chat-room` folder to the `/wp-content/plugins/` directory
