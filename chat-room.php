@@ -165,9 +165,10 @@ class Chatroom {
 				unset( $messages[ $key ] );
 			}
 		}
+
 		$messages = array_values( $messages );
 		echo json_encode( $messages );
-		die;
+		die();
 	}
 
 	/**
