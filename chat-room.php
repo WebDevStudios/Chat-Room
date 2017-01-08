@@ -62,7 +62,7 @@ class Chatroom {
 			'not_found' => __( 'No Chat Rooms found', 'chat-room' ),
 			'not_found_in_trash' => __( 'No Chat Rooms found in Trash', 'chat-room' ),
 			'parent_item_colon' => '',
-			'menu_name' => __( 'Chat Rooms', 'chat-room' )
+			'menu_name' => __( 'Chat Rooms', 'chat-room' ),
 		);
 		$args = array(
 			'labels' => $labels,
@@ -76,7 +76,7 @@ class Chatroom {
 			'hierarchical' => false,
 			'menu_position' => null,
 			'show_in_nav_menus' => true,
-			'supports' => array( 'title' )
+			'supports' => array( 'title' ),
 		);
 		register_post_type( 'chat-room', $args );
 	}
@@ -362,11 +362,10 @@ class Chatroom {
 
 		$args = array(
 			'ID' => $post_id,
-			'post_excerpt' => $post->post_title
+			'post_excerpt' => $post->post_title,
 		);
 		wp_update_post( $args );
 
 	}
 }
-
 $chatroom = new Chatroom();
