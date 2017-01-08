@@ -332,8 +332,10 @@ class Chatroom {
 		// Use get_post_meta to retrieve an existing value from the database and use the value for the form.
 		$value = get_post_meta( $post->ID, '_logged_in_only', true );
 		?>
-		<input type="checkbox" id="logged_in_only" name="logged_in_only" value="1" <?php if( $value == '1') echo 'checked="checked"'; ?> />
-		<label for="logged_in_only"><?php _e( 'Should the user be logged in?', 'chat-room' ); ?></label><br/>
+		<input type="checkbox" id="logged_in_only" name="logged_in_only" value="1" <?php if ( '1' === $value ) {
+			echo 'checked="checked"';
+		} ?> />
+		<label for="logged_in_only"><?php esc_html_e( 'Should the user be logged in?', 'chat-room' ); ?></label><br/>
 		<?php
 	}
 
