@@ -296,7 +296,7 @@ class Chatroom {
 	function the_content_filter( $content ) {
 		global $post;
 
-		if ( $post->post_type != 'chat-room' ) {
+		if ( 'chat-room' !== $post->post_type ) {
 			return $content;
 		}
 
@@ -373,7 +373,7 @@ class Chatroom {
 
 	function yoast_fix( $post_id, $post ) {
 
-		if( 'true' == $this->noinception || isset( $post->post_excerpt ) ) {
+		if ( 'true' === $this->noinception || isset( $post->post_excerpt ) ) {
 			return;
 		}
 
