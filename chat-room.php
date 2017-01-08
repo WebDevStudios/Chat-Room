@@ -362,7 +362,7 @@ class Chatroom {
 		// Sanitize user input.
 		$mydata = sanitize_text_field( $_POST['logged_in_only'] );
 
-		update_post_meta($post_ID, '_logged_in_only', $mydata);
+		update_post_meta( $post_id, '_logged_in_only', $mydata );
 	}
 
 	function submit_button() {
