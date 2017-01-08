@@ -195,11 +195,11 @@ class Chatroom {
 		$user = get_userdata( $user_id );
 
 		if ( ! $user_text_color = get_user_meta( $user_id, 'user_color', true ) ) {
-	    	// Set random color for each user
-	    	$red = rand( 0, 16 );
-	    	$green = 16 - $red;
-	    	$blue = rand( 0, 16 );
-		    $user_text_color = '#' . dechex( $red^2 ) . dechex( $green^2 ) . dechex( $blue^2 );
+			// Set random color for each user.
+			$red             = rand( 0, 16 );
+			$green           = 16 - $red;
+			$blue            = rand( 0, 16 );
+			$user_text_color = '#' . dechex( $red ^ 2 ) . dechex( $green ^ 2 ) . dechex( $blue ^ 2 );
 	    	update_user_meta( $user_id, 'user_color', $user_text_color );
 	    }
 
@@ -209,8 +209,8 @@ class Chatroom {
 		// Save the message in recent messages file
 
 		$log_filename = $this->get_log_filename( $chatroom_slug );
-		$contents = $this->parse_messages_log_file( $log_filename );
-		$messages = json_decode( $contents );
+		$contents     = $this->parse_messages_log_file( $log_filename );
+		$messages     = json_decode( $contents );
 		$last_message_id = 0; // Helps determine the new message's ID
 		foreach ( $messages as $key => $message ) {
 			if ( time() - $message->time > 10 ) {
@@ -226,24 +226,24 @@ class Chatroom {
 		}
 		$new_message_id = $last_message_id + 1;
 		$messages[] = array(
-			'id' => $new_message_id,
-			'time' => time(),
-			'sender' => $user_id,
+			'id'       => $new_message_id,
+			'time'     => time(),
+			'sender'   => $user_id,
 			'contents' => $content,
-			'html' => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html'     => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 
 		// Save the message in the daily log
 		$log_filename = $this->get_log_filename( $chatroom_slug, date( 'm-d-y', time() ) );
-		$contents = $this->parse_messages_log_file( $log_filename );
-		$messages = json_decode( $contents );
+		$contents     = $this->parse_messages_log_file( $log_filename );
+		$messages     = json_decode( $contents );
 		$messages[] = array(
-			'id' => $new_message_id,
-			'time' => time(),
-			'sender' => $user_id,
+			'id'       => $new_message_id,
+			'time'     => time(),
+			'sender'   => $user_id,
 			'contents' => $content,
-			'html' => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
+			'html'     => '<div data-user-id="' . $user->user_login . '" class="chat-message-' . $new_message_id . ' ' . $chat_custom_classes . '"><strong style="color: ' . $user_text_color . ';">' . $user->user_login . '</strong>: ' . $content . '</div>',
 		);
 		$this->write_log_file( $log_filename, json_encode( $messages ) );
 	}
@@ -267,8 +267,8 @@ class Chatroom {
 	 * @return string Log file name
 	 */
 	function get_log_filename( $chatroom_slug, $date = 'recent' ) {
-		$upload_dir = wp_upload_dir();
-		$log_folder = apply_filters( 'chat_room_log_dir', 'chatter' );
+		$upload_dir   = wp_upload_dir();
+		$log_folder   = apply_filters( 'chat_room_log_dir', 'chatter' );
 		$log_filename = $upload_dir['basedir'] . $log_folder . $chatroom_slug . '-' . $date;
 		return $log_filename;
 	}
@@ -281,8 +281,8 @@ class Chatroom {
 	 */
 	function parse_messages_log_file( $log_filename ) {
 		$upload_dir = wp_upload_dir();
-		$handle = fopen( $log_filename, 'r' );
-		$contents = fread( $handle, filesize( $log_filename ) );
+		$handle     = fopen( $log_filename, 'r' );
+		$contents   = fread( $handle, filesize( $log_filename ) );
 		fclose( $handle );
 		return $contents;
 	}
