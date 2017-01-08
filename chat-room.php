@@ -86,8 +86,11 @@ class Chatroom {
 	 */
 	function enqueue_scripts() {
 		global $post;
-		if ( $post->post_type != 'chat-room' )
+
+		if ( 'chat-room' !== $post->post_type ) {
 			return;
+		}
+
 		wp_enqueue_script( 'chat-room', plugins_url( 'chat-room.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_style( 'chat-room-styles', plugins_url( 'chat-room.css', __FILE__ ) );
 	}
@@ -124,14 +127,16 @@ class Chatroom {
 	 */
 	function define_javascript_variables() {
 		global $post;
-		if ( empty( $post->post_type ) || $post->post_type != 'chat-room' )
-			return; ?>
+
+		if ( empty( $post->post_type ) || 'chat-room' !== $post->post_type ) {
+			return;
+		}
+		?>
 		<script>
 		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
 		var chatroom_slug = '<?php echo $post->post_name; ?>';
 		</script>
 		<?php
-
 	}
 
 	/**
@@ -145,11 +150,14 @@ class Chatroom {
 		$contents = $this->parse_messages_log_file( $log_filename );
 		$messages = json_decode( $contents );
 
-		if ( !is_array( $messages ) ) { die; }
+		if ( ! is_array( $messages ) ) {
+			die;
+		}
 
 		foreach ( $messages as $key => $message ) {
-			if ( $message->id <= $_POST['last_update_id'] )
-				unset( $messages[$key] );
+			if ( $message->id <= $_POST['last_update_id'] ) {
+				unset( $messages[ $key ] );
+			}
 		}
 		$messages = array_values( $messages );
 		echo json_encode( $messages );
@@ -200,15 +208,15 @@ class Chatroom {
 		foreach ( $messages as $key => $message ) {
 			if ( time() - $message->time > 10 ) {
 				$last_message_id = $message->id;
-				unset( $messages[$key] );
-			}
-			else {
+				unset( $messages[ $key ] );
+			} else {
 				break;
 			}
 		}
 		$messages = array_values( $messages );
-		if ( ! empty( $messages ) )
+		if ( ! empty( $messages ) ) {
 			$last_message_id = end( $messages )->id;
+		}
 		$new_message_id = $last_message_id + 1;
 		$messages[] = array(
 			'id' => $new_message_id,
@@ -324,17 +332,20 @@ class Chatroom {
 
 	function save_meta_box( $post_id ) {
 		// First we need to check if the current user is authorised to do this action.
-		if ( 'page' == $_POST['post_type'] ) {
-			if ( ! current_user_can( 'edit_page', $post_id ) )
+		if ( 'page' === $_POST['post_type'] ) {
+			if ( ! current_user_can( 'edit_page', $post_id ) ) {
 				return;
+			}
 		} else {
-			if ( ! current_user_can( 'edit_post', $post_id ) )
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
 				return;
+			}
 		}
 
 		// Secondly we need to check if the user intended to change this value.
-		if ( ! isset( $_POST['chatroom_loggedin_nonce'] ) || ! wp_verify_nonce( $_POST['chatroom_loggedin_nonce'], plugin_basename( __FILE__ ) ) )
+		if ( ! isset( $_POST['chatroom_loggedin_nonce'] ) || ! wp_verify_nonce( $_POST['chatroom_loggedin_nonce'], plugin_basename( __FILE__ ) ) ) {
 			return;
+		}
 
 		//if saving in a custom table, get post_ID
 		$post_ID = $_POST['post_ID'];
