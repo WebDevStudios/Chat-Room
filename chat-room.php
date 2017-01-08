@@ -9,7 +9,7 @@ Author URI: http://webdevstudios.com/
 License: GPLv2 or later
 */
 
-Class Chatroom {
+class Chatroom {
 
 	public $noinception = 'false';
 
