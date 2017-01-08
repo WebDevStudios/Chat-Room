@@ -33,7 +33,6 @@ class Chatroom {
 
 	/**
 	 * Let's get the party started. Register our CPT and flush the rewrite rules.
-	 * @return void nothing to return here.
 	 */
 	function activation_hook() {
 		$this->register_post_types();
@@ -41,15 +40,13 @@ class Chatroom {
 	}
 	/**
 	 * Aww, busted. Flush the rewrite rules for after the chat room CPT left.
-	 * @return void nothing to return here.
 	 */
 	function deactivation_hook() {
 		flush_rewrite_rules();
 	}
 
 	/**
-	 * Create and register our post type
-	 * @return void nothing to return here.
+	 * Create and register our post type.
 	 */
 	function register_post_types() {
 		$labels = array(
@@ -86,7 +83,6 @@ class Chatroom {
 
 	/**
 	 * Enqueue our js and css, only for when we're on a chat room.
-	 * @return void nothing to return here.
 	 */
 	function enqueue_scripts() {
 		global $post;
@@ -97,9 +93,10 @@ class Chatroom {
 	}
 
 	/**
-	 * Set up and prepare our log files
-	 * @param  int $post_id ID for the current chat room
-	 * @param  object $post    WP_Query object for our chat room post type.
+	 * Set up and prepare our log files.
+	 *
+	 * @param int $post_id ID for the current chat room
+	 * @param object $post WP_Query object for our chat room post type.
 	 * @return void          nothing to return here.
 	 */
 	function maybe_create_chatroom_log_file( $post_id, $post ) {
@@ -123,8 +120,7 @@ class Chatroom {
 	}
 
 	/**
-	 * set up our js variables for use with ajax.
-	 * @return void nothing to return here.
+	 * Set up our js variables for use with ajax.
 	 */
 	function define_javascript_variables() {
 		global $post;
@@ -139,7 +135,8 @@ class Chatroom {
 	}
 
 	/**
-	 * Check on our logs
+	 * Check on our logs.
+	 *
 	 * @return void nothing to return here.
 	 */
 	function ajax_check_updates_handler() {
@@ -173,11 +170,11 @@ class Chatroom {
 	}
 
 	/**
-	 * Prepare to write to our log file with new content
-	 * @param  string $chatroom_slug slug for the current chat room
-	 * @param  int $user_id       user ID for the message sender
-	 * @param  string $content       user's message
-	 * @return void                nothing to return here.
+	 * Prepare to write to our log file with new content.
+	 *
+	 * @param string $chatroom_slug Slug for the current chat room.
+	 * @param int    $user_id       User ID for the message sender.
+	 * @param string $content       User's message.
 	 */
 	function save_message( $chatroom_slug, $user_id, $content ) {
 		$user = get_userdata( $user_id );
@@ -237,10 +234,10 @@ class Chatroom {
 	}
 
 	/**
-	 * Open and actually write to the log file
-	 * @param  string $log_filename url for the appropriate log file
-	 * @param  string $content      messages to add
-	 * @return void               nothing to return here.
+	 * Open and actually write to the log file.
+	 *
+	 * @param string $log_filename URL for the appropriate log file.
+	 * @param string $content      Messages to add.
 	 */
 	function write_log_file( $log_filename, $content ) {
 		$handle = fopen( $log_filename, 'w' );
@@ -248,10 +245,11 @@ class Chatroom {
 	}
 
 	/**
-	 * Return our log file name
-	 * @param  string $chatroom_slug slug for the chat room log to write to
-	 * @param  string $date          date timestamp or "recent" to append to log file name
-	 * @return string                log file name
+	 * Return our log file name.
+	 *
+	 * @param string $chatroom_slug Slug for the chat room log to write to.
+	 * @param string $date          Date timestamp or "recent" to append to log file name.
+	 * @return string Log file name
 	 */
 	function get_log_filename( $chatroom_slug, $date = 'recent' ) {
 		$upload_dir = wp_upload_dir();
@@ -261,9 +259,10 @@ class Chatroom {
 	}
 
 	/**
-	 * Parse our file for reading
-	 * @param  string $log_filename url for the appropriate log file
-	 * @return string               log content
+	 * Parse our file for reading.
+	 *
+	 * @param string $log_filename URL for the appropriate log file.
+	 * @return string Log content.
 	 */
 	function parse_messages_log_file( $log_filename ) {
 		$upload_dir = wp_upload_dir();
@@ -275,8 +274,9 @@ class Chatroom {
 
 	/**
 	 * Filter callback for chat room used to display chat room in place of the_content.
-	 * @param  [type] $content [description]
-	 * @return [type]          [description]
+	 *
+	 * @param string $content Post content.
+	 * @return string Replaced post content.
 	 */
 	function the_content_filter( $content ) {
 		global $post;
