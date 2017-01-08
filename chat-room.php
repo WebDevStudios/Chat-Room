@@ -300,8 +300,8 @@ class Chatroom {
 			return $content;
 		}
 
-		if ( '1' == get_post_meta( $post->ID, '_logged_in_only', true ) )  {
-			echo apply_filters( 'chat_room_not_logged_in_msg', 'You need to be logged in to participate in the chatroom.' );
+		if ( '1' === get_post_meta( $post->ID, '_logged_in_only', true ) ) {
+			echo apply_filters( 'chat_room_not_logged_in_msg', __( 'You need to be logged in to participate in the chatroom.', 'chat-room' ) );
 			return;
 		}
 
