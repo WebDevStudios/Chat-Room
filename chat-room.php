@@ -115,6 +115,7 @@ class Chatroom {
 		$upload_dir   = wp_upload_dir();
 		$log_folder   = apply_filters( 'chat_room_log_dir', 'chatter' );
 		$log_filename = $upload_dir['basedir'] . '/' . $log_folder . '/' . $post->post_name . '-' . date( 'm-d-y', time() );
+
 		if ( file_exists( $log_filename ) ) {
 			return;
 		}
@@ -150,10 +151,10 @@ class Chatroom {
 	 * @return void nothing to return here.
 	 */
 	function ajax_check_updates_handler() {
-		$upload_dir = wp_upload_dir();
-		$log_filename = $this->get_log_filename( $_POST['chatroom_slug'] );
-		$contents = $this->parse_messages_log_file( $log_filename );
-		$messages = json_decode( $contents );
+		$upload_dir   = wp_upload_dir();
+		$log_filename = $this->get_log_filename( sanitize_text_field( $_POST['chatroom_slug'] ) );
+		$contents     = $this->parse_messages_log_file( $log_filename );
+		$messages     = json_decode( $contents );
 
 		if ( ! is_array( $messages ) ) {
 			die;
