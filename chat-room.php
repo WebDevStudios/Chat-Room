@@ -366,11 +366,17 @@ class Chatroom {
 	}
 
 	function submit_button() {
-		echo '<p><a href="#" class="chat-submit">Send to chat</a></p>';
+		printf(
+			'<p><a href="#" class="chat-submit">%s</a></p>',
+			esc_html__( 'Send to chat', 'chat-room' )
+		);
 	}
 
 	function usability_notes() {
-		echo '<p><small>' . __( 'Press enter, or click "Send to chat", to submit. Click a user name to add it to the textarea.', 'chat-room' ) . '<small></p>';
+		printf(
+			'<p><small>%s<small></p>',
+			esc_html__( 'Press enter, or click "Send to chat", to submit. Click a user name to add it to the textarea.', 'chat-room' )
+		);
 	}
 
 	function yoast_fix( $post_id, $post ) {
