@@ -204,9 +204,9 @@ class Chatroom {
 	    }
 
 		$content = esc_attr( $content );
-		//allow adding custom classes to message output
+		// Allow adding custom classes to message output.
 		$chat_custom_classes = implode( ' ', apply_filters( 'chat_room_custom_msg_classes', array() ) );
-		// Save the message in recent messages file
+		// Save the message in recent messages file.
 
 		$log_filename = $this->get_log_filename( $chatroom_slug );
 		$contents     = $this->parse_messages_log_file( $log_filename );
@@ -325,11 +325,11 @@ class Chatroom {
 
 	/* Prints the box content */
 	function render_meta_box( $post ) {
-		// Use nonce for verification
+		// Use nonce for verification.
 		wp_nonce_field( plugin_basename( __FILE__ ), 'chatroom_loggedin_nonce' );
 
-		// The actual fields for data entry
-		// Use get_post_meta to retrieve an existing value from the database and use the value for the form
+		// The actual fields for data entry.
+		// Use get_post_meta to retrieve an existing value from the database and use the value for the form.
 		$value = get_post_meta( $post->ID, '_logged_in_only', true );
 		?>
 		<input type="checkbox" id="logged_in_only" name="logged_in_only" value="1" <?php if( $value == '1') echo 'checked="checked"'; ?> />
@@ -354,9 +354,10 @@ class Chatroom {
 			return;
 		}
 
-		//if saving in a custom table, get post_ID
-		$post_ID = $_POST['post_ID'];
-		//sanitize user input
+		// If saving in a custom table, get post_ID.
+		$post_id = $_POST['post_ID'];
+
+		// Sanitize user input.
 		$mydata = sanitize_text_field( $_POST['logged_in_only'] );
 
 		update_post_meta($post_ID, '_logged_in_only', $mydata);
