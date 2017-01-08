@@ -318,8 +318,8 @@ class Chatroom {
 
 	function register_meta_box() {
 		$screens = array( 'chat-room' );
-		foreach ($screens as $screen) {
-			add_meta_box( 'logged-in-only', 'Privacy?', array( $this, 'render_meta_box' ), $screen, 'side', 'default' );
+		foreach ( $screens as $screen ) {
+			add_meta_box( 'logged-in-only', esc_html_e( 'Privacy?', 'chat-room' ), array( $this, 'render_meta_box' ), $screen, 'side', 'default' );
 		}
 	}
 
