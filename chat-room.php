@@ -87,9 +87,13 @@ class Chatroom {
 	function enqueue_scripts() {
 		global $post;
 
-		if ( 'chat-room' !== $post->post_type ) {
-			return;
-		}
+		if( is_object( $post ) )
+			if( $post->post_type !== 'chat-room' )
+				return;
+		elseif( is_array( $post ) )
+			if( $post['post_type'] !== 'chat-room' )
+				return;
+		else return;
 
 		wp_enqueue_script( 'chat-room', plugins_url( 'chat-room.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_style( 'chat-room-styles', plugins_url( 'chat-room.css', __FILE__ ) );
